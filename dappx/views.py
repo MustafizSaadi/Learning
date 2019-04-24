@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 
 def index(request):
     return render(request,'dappx/index.html')
@@ -24,9 +25,17 @@ def register(request):
     if request.method == 'POST':
         user_form = UserForm(data=request.POST)
         profile_form = UserProfileInfoForm(data=request.POST)
+
+         # print(user_form.pass)
+        username = request.POST.get('username')
+        password = request.POST.get('password2')
+        print(username)
+        print(password)
+
         if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save()
-            user.set_password(user.password)
+            print(user.password)
+            user.set_password(password)
             user.save()
             profile = profile_form.save(commit=False)
             profile.user = user
